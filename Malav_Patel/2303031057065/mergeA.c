@@ -1,56 +1,43 @@
 #include <stdio.h>
-#include <stdlib.h>
-
-void merge(int arr1[], int n1, int arr2[], int n2, int arr3[])
-{
-    int i = 0, j = 0, k = 0;
-
-    while (i < n1 && j < n2)
-    {
-        if (arr1[i] <= arr2[j])
-        {
-            arr3[k] = arr1[i];
-            i++;
-        }
-        else
-        {
-            arr3[k] = arr2[j];
-            j++;
-        }
-        k++;
-    }
-
-    while (i < n1)
-    {
-        arr3[k] = arr1[i];
-        i++;
-        k++;
-    }
-
-    while (j < n2)
-    {
-        arr3[k] = arr2[j];
-        j++;
-        k++;
-    }
-}
-
 int main()
 {
-    int arr1[] = {1, 3, 5, 7};
-    int n1 = sizeof(arr1) / sizeof(arr1[0]);
+    int n1, n2, n3 ;
+    int a[10000], b[10000], c[20000];
+    printf("Enter the size of first array: ");
+    scanf("%d", &n1);
+    printf("Enter the array elements: ");
+    for (int i = 0; i < n1; i++)
+        scanf("%d", &a[i]);
+    printf("Enter the size of second array: ");
+    scanf("%d", &n2);
+    printf("Enter the array elements: ");
+    for (int i = 0; i < n2; i++)
+        scanf("%d", &b[i]);
+    n3 = n1 + n2;
+    for (int i = 0; i < n1; i++)
+        c[i] = a[i];
+    for (int i = 0; i < n2; i++)
+        c[i + n1] = b[i];
 
-    int arr2[] = {2, 4, 6, 8, 10};
-    int n2 = sizeof(arr2) / sizeof(arr2[0]);
+    printf("The merged array: ");
+    for (int i = 0; i < n3; i++)
+        printf("%d ", c[i]);
 
-    int arr3[n1 + n2];
-
-    merge(arr1, n1, arr2, n2, arr3);
-
-    for (int i = 0; i < n1 + n2; i++)
+    printf("\nFinal array after sorting: ");
+    for (int i = 0; i < n3; i++)
     {
-        printf("%d ", arr3[i]);
+        int temp;
+        for (int j = i + 1; j < n3; j++)
+        {
+            if (c[i] > c[j])
+            {
+                temp = c[i];
+                c[i] = c[j];
+                c[j] = temp;
+            }
+        }
     }
-
+    for (int i = 0; i < n3; i++)
+        printf(" %d ", c[i]);
     return 0;
 }
