@@ -57,7 +57,5 @@ int main() {
     printf("Enter a number: ");
     scanf("%s", num);
     findNextNumber(num);
-    printf("Malav Patel\n");
-    printf("2303031057065\n");
     return 0;
 }
