@@ -1,75 +1,58 @@
 #include <stdio.h>
-int MAXSIZE = 8;
-int stack[8];
-int top = -1;
-/* Check if the stack is empty */
-int isempty()
-{
-    if (top == -1)
-        return 1;
-    else
-        return 0;
+#include <stdbool.h>
+#include <limits.h>
+#define V 5 // Number of vertices in the graph
+// Function to find the vertex with the minimum key value
+int minKey(int key[], bool mstSet[]) {
+ int min = INT_MAX, min_index;
+ for (int v = 0; v < V; v++) {
+ if (!mstSet[v] && key[v] < min) {
+ min = key[v];
+ min_index = v;
+ }
+ }
+ return min_index;
 }
-/* Check if the stack is full */
-int isfull()
-{
-    if (top == MAXSIZE)
-        return 1;
-    else
-        return 0;
+// Function to print the MST
+void printMST(int parent[], int graph[V][V]) {
+ printf("Edge \tWeight\n");
+ for (int i = 1; i < V; i++) {
+ printf("%d - %d \t%d\n", parent[i], i, graph[i][parent[i]]);
+ }
 }
-/* Function to return the topmost element in the stack */
-int peek()
-{
-    return stack[top];
+// Function to construct and find the MST using Prim's algorithm
+void primMST(int graph[V][V]) {
+ int parent[V]; // Array to store the constructed MST
+ int key[V]; // Key values used to pick minimum weight edge
+ bool mstSet[V]; // To represent set of vertices included in MST
+ for (int i = 0; i < V; i++) {
+ key[i] = INT_MAX;
+ mstSet[i] = false;
+ }
+ key[0] = 0; // Start from the first vertex
+ parent[0] = -1; // First node is always the root of MST
+ for (int count = 0; count < V - 1; count++) {
+ int u = minKey(key, mstSet);
+ mstSet[u] = true;
+ for (int v = 0; v < V; v++) {
+ if (graph[u][v] && !mstSet[v] && graph[u][v] < key[v]) {
+ parent[v] = u;
+ key[v] = graph[u][v];
+ }
+ }
+ }
+ // Print the constructed MST
+ printMST(parent, graph);
 }
-/* Function to delete from the stack */
-
-int pop()
-{
-    int data;
-    if (!isempty())
-    {
-        data = stack[top];
-        top = top - 1;
-        return data;
-    }
-    else
-    {
-        printf("Could not retrieve data, Stack is empty.\n");
-    }
-}
-/* Function to insert into the stack */
-int push(int data)
-{
-    if (!isfull())
-    {
-        top = top + 1;
-        stack[top] = data;
-    }
-    else
-    {
-        printf("Could not insert data, Stack is full.\n");
-    }
-}
-/* Main function */
-int main()
-{
-    push(44);
-    push(10);
-    push(62);
-    push(123);
-    push(15);
-
-    printf("Element at top of the stack: %d\n", peek());
-    printf("Elements: \n");
-    // print stack data
-    while (!isempty())
-    {
-        int data = pop();
-        printf("%d\n", data);
-    }
-    printf("Stack full: %s\n", isfull() ? "true" : "false");
-    printf("Stack empty: %s\n", isempty() ? "true" : "false");
-    return 0;
+int main() {
+ int graph[V][V] = {
+ {0, 2, 0, 6, 0},
+ {2, 0, 3, 8, 5},
+ {0, 3, 0, 0, 7},
+ {6, 8, 0, 0, 9},
+ {0, 5, 7, 9, 0}
+ };
+ // Print the MST using Prim's algorithm
+ primMST(graph);
+ return 0;
 }
