@@ -40,7 +40,5 @@ int main()
     struct interval intervals[] = {{1, 3}, {2, 16}, {9, 3}, {15, 19}};
     int n = sizeof(intervals) / sizeof(intervals[0]);
     mergeIntervals(intervals, n);
-    printf("Malav Patel\n");
-    printf("2303031057065\n");
     return 0;
 }
