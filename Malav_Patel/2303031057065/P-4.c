@@ -42,7 +42,5 @@ int main()
     }
     printf("Next Greater Elements:\n");
     printNGE(arr, size);
-    printf("Malav Patel\n");
-    printf("2303031057065\n");
     return 0;
 }
