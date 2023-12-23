@@ -65,8 +65,7 @@ printf("Enter an expression: ");
 scanf("%s", expression);
 if (isBalancedExpression(expression)) {
 printf("The expression is balanced.\n");
- printf("Malav Patel\n");
-printf("230301057065");
+
 } else {
 printf("The expression is not balanced.\n");
 }
