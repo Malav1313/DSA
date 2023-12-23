@@ -35,7 +35,5 @@ int main()
     int heightsSize = sizeof(heights) / sizeof(heights[0]);
     int result = largestRectangleArea(heights, heightsSize);
     printf("The largest rectangle area is: %d\n", result);
-    printf("Malav Patel\n");
-    printf("2303031057065\n");
     return 0;
 }
