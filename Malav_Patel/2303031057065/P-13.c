@@ -1,87 +1,67 @@
 #include <stdio.h>
-int stack[100], choice, n, top, x, i;
-void push(void);
-void pop(void);
-void display(void);
-int main()
-{
-    top = -1;
-    printf("\n Enter the size of STACK[MAX=100]:");
-    scanf("%d", &n);
-    printf("\n\t STACK OPERATIONS USING ARRAY");
-    printf("\n\t--------------------------------");
-    printf("\n\t 1.PUSH\n\t 2.POP\n\t 3.DISPLAY\n\t 4.EXIT");
-    do
-    {
-        printf("\n Enter the Choice:");
-        scanf("%d", &choice);
-        switch (choice)
-        {
-        case 1:
-        {
-            push();
-            break;
-        }
-        case 2:
-        {
-            pop();
-            break;
-        }
-        case 3:
-        {
-            display();
-            break;
-        }
-        case 4:
-        {
-            printf("\n\t EXIT POINT ");
-            break;
-        }
-        default:
-        {
-            printf("\n\t Please Enter a Valid Choice(1/2/3/4)");
-        }
-        }
-    } while (choice != 4);
-    return 0;
+#include <stdlib.h>
+#include <stdbool.h>
+#define V 5 // Number of vertices in the graph
+#define E 7 // Number of edges in the graph
+// Structure to represent an edge in the graph
+struct Edge {
+ int src, dest, weight;
+};
+// Structure to represent a subset for union-find
+struct Subset {
+ int parent, rank;
+};
+// Function to find the set of an element (using path compression)
+int find(struct Subset subsets[], int i) {
+ if (subsets[i].parent != i)
+ subsets[i].parent = find(subsets, subsets[i].parent);
+ return subsets[i].parent;
 }
-void push()
-{
-    if (top >= n - 1)
-    {
-        printf("\n\tSTACK is over flow");
-    }
-    else
-    {
-        printf(" Enter a value to be pushed:");
-        scanf("%d", &x);
-        top++;
-        stack[top] = x;
-    }
+// Function to perform union of two sets (using rank)
+void unionSets(struct Subset subsets[], int x, int y) {
+ int rootX = find(subsets, x);
+ int rootY = find(subsets, y);
+ if (subsets[rootX].rank < subsets[rootY].rank)
+ subsets[rootX].parent = rootY;
+ else if (subsets[rootX].rank > subsets[rootY].rank)
+ subsets[rootY].parent = rootX;
+ else {
+ subsets[rootY].parent = rootX;
+ subsets[rootX].rank++;
+ }
 }
-void pop()
-{
-    if (top <= -1)
-    {
-        printf("\n\t Stack is under flow");
-    }
-    else
-    {
-        printf("\n\t The popped elements is %d", stack[top]);
-        top--;
-    }
+// Comparator function to sort edges by weight
+int compareEdges(const void* a, const void* b) {
+ return ((struct Edge*)a)->weight - ((struct Edge*)b)->weight;
 }
-void display()
-{
-    if (top >= 0)
-    {
-        printf("\n The elements in STACK \n");
-        for (i = top; i >= 0; i--)
-            printf("\n%d", stack[i]);
-        printf("\n Press Next Choice");
-    }
-    else
-    {
-        printf("\n The STACK is empty");
-    }
+// Function to find the MST using Kruskal's algorithm
+void kruskalMST(struct Edge edges[]) {
+ struct Subset subsets[V];
+ for (int i = 0; i < V; i++) {
+ subsets[i].parent = i;
+ subsets[i].rank = 0;
+ }
+ int mstWeight = 0; // Total weight of MST
+ qsort(edges, E, sizeof(edges[0]), compareEdges); // Sort edges by weight
+ printf("Edges in the MST:\n");
+ for (int i = 0, count = 0; count < V - 1; i++) {
+ int srcRoot = find(subsets, edges[i].src);
+ int destRoot = find(subsets, edges[i].dest);
+ if (srcRoot != destRoot) {
+ printf("(%d, %d) weight: %d\n", edges[i].src, edges[i].dest, edges[i].weight);
+ mstWeight += edges[i].weight;
+ unionSets(subsets, srcRoot, destRoot);
+ count++;
+ }
+ }
+ printf("Total weight of MST: %d\n", mstWeight);
+}
+int main() {
+ struct Edge edges[E] = {
+ {0, 1, 2}, {0, 3, 6}, {1, 2, 3},
+ {1, 3, 8}, {1, 4, 5}, {2, 4, 7},
+ {3, 4, 9}
+ };
+ kruskalMST(edges);
+ return 0;
 }
